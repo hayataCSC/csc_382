@@ -77,7 +77,5 @@ header, content = getHeaderAndContent(socket)
 # Get the status code from the response header
 statusCode = getStatusCodeFrom(header)
 
-statusCode = 200
-
 # If status code is 200, save the content to the file
 statusCode == 200 and saveContent(filePath, content)
