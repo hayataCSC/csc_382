@@ -5,7 +5,7 @@ from socket import *
 
 # Helper func for forming a request HTTP request message
 def createHttpRequest(path, host):
-  return f'GET {path} HTTP/1.1\nHOST: {host}\nConnection: close\n\n'
+  return f'GET {path} HTTP/1.1\r\nHOST: {host}\r\nConnection: close\r\n\r\n'
 
 # Helper func for getting contenet length from the response header
 def getContentLengthFrom(header):
@@ -60,11 +60,14 @@ filePath = sys.argv[2]
 urlInfo = urlparse(url)
 # Get the hostname and path
 host, path = urlInfo.hostname, urlInfo.path
+# Get
+path = path if path != '' else '/'
 # Get the port number (use 80 if port number is not specified)
 port = int(urlInfo.port) if urlInfo.port else 80
 
 # Compose HTTP request message
 httpMsg = createHttpRequest(path, host)
+print('--- request header ---\n', httpMsg)
 
 # Connect to the web server through TCP and send HTTP request
 socket = socket(AF_INET, SOCK_STREAM)
@@ -74,8 +77,12 @@ socket.send(httpMsg.encode())
 # Get header and content from the response
 header, content = getHeaderAndContent(socket)
 
+print('--- response header ---\n', header)
+
 # Get the status code from the response header
 statusCode = getStatusCodeFrom(header)
+
+statusCode = 200
 
 # If status code is 200, save the content to the file
 statusCode == 200 and saveContent(filePath, content)
