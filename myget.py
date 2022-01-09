@@ -67,7 +67,7 @@ port = int(urlInfo.port) if urlInfo.port else 80
 
 # Compose HTTP request message
 httpMsg = createHttpRequest(path, host)
-print('--- request header ---\n', httpMsg)
+print('--- request header ---', httpMsg, sep="\n")
 
 # Connect to the web server through TCP and send HTTP request
 socket = socket(AF_INET, SOCK_STREAM)
@@ -77,12 +77,14 @@ socket.send(httpMsg.encode())
 # Get header and content from the response
 header, content = getHeaderAndContent(socket)
 
-print('--- response header ---\n', header)
+print('--- response header ---', header, sep="\n", end="\n\n")
 
 # Get the status code from the response header
 statusCode = getStatusCodeFrom(header)
 
-statusCode = 200
-
-# If status code is 200, save the content to the file
-statusCode == 200 and saveContent(filePath, content)
+if (statusCode != '200'):
+  # Print the status code if status code is other than 200
+  print('--- error ---', f'Error code: {statusCode}', sep="\n")
+else:
+  # If status code is 200, save the content to the file
+  saveContent(filePath, content)
